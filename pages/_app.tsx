@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import '../styles/globals.css';
 import '../styles/font.css';
+import '../styles/burger-menu.css';
+import '../styles/checkbox.css';
 
 const queryClient = new QueryClient();
 

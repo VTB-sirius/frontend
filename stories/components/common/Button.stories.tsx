@@ -11,6 +11,7 @@ const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 export const Outline = Template.bind({});
+export const Secondary = Template.bind({});
 
 Primary.args = {
 	variant: 'primary',
@@ -20,6 +21,12 @@ Primary.args = {
 
 Outline.args = {
 	variant: 'outline',
+	children: 'Загрузить файл',
+	className: 'w-[343px] h-[73px]',
+};
+
+Secondary.args = {
+	variant: 'secondary',
 	children: 'Загрузить файл',
 	className: 'w-[343px] h-[73px]',
 };

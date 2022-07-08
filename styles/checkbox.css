@@ -1,0 +1,23 @@
+.custom-checkbox {
+	position: absolute;
+  	z-index: -1;
+	opacity: 0;
+}
+
+.custom-checkbox + label::before {
+	content: '';
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.75' y='0.75' width='18.5' height='18.5' rx='5.25' stroke='%23E0E1E6' stroke-width='1.5'/%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}
+
+.custom-checkbox:checked + label::before {
+	content: '';
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6C0 2.68629 2.68629 0 6 0H14C17.3137 0 20 2.68629 20 6V14C20 17.3137 17.3137 20 14 20H6C2.68629 20 0 17.3137 0 14V6Z' fill='%23739EF1'/%3E%3Cpath d='M7.99797 14.2197C7.76262 14.2187 7.53728 14.1244 7.37136 13.9575L4.92714 11.5133C4.76037 11.3465 4.66667 11.1203 4.66667 10.8845C4.66667 10.6486 4.76037 10.4224 4.92714 10.2557C5.09392 10.0889 5.32012 9.99518 5.55597 9.99518C5.79183 9.99518 6.01803 10.0889 6.1848 10.2557L8.00241 12.0733L13.8152 6.26047C13.982 6.09369 14.2082 6 14.444 6C14.6799 6 14.9061 6.09369 15.0729 6.26047C15.2396 6.42725 15.3333 6.65344 15.3333 6.8893C15.3333 7.12516 15.2396 7.35136 15.0729 7.51813L8.62902 13.962C8.54597 14.0444 8.44748 14.1095 8.33919 14.1538C8.2309 14.198 8.11494 14.2204 7.99797 14.2197Z' fill='white'/%3E%3C/svg%3E%0A");
+	background-repeat: no-repeat;
+}

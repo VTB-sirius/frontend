@@ -1,5 +1,5 @@
 import Props from './Button.props';
-import { COMMON_STYLES, OUTLINE_STYLES, PRIMARY_STYLES } from './Button.styles';
+import { COMMON_STYLES, OUTLINE_STYLES, PRIMARY_STYLES, SECONDARY_STYLES } from './Button.styles';
 
 const Button: React.FC<Props> = ({ variant = 'primary', className = '', children, ...props }) => {
 	switch(variant) {
@@ -12,6 +12,12 @@ const Button: React.FC<Props> = ({ variant = 'primary', className = '', children
 		case 'outline':
 			return (
 				<button className={`${className} ${COMMON_STYLES} ${OUTLINE_STYLES}`} {...props}>
+					{children}
+				</button>
+			);
+		case 'secondary':
+			return (
+				<button className={`${className} ${COMMON_STYLES} ${SECONDARY_STYLES}`} {...props}>
 					{children}
 				</button>
 			);
