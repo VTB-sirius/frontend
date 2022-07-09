@@ -29,6 +29,7 @@ const BubbleChart: React.FC<Props> = ({ width, height, data, onClickBubble = () 
 			{Object.keys(scatters)
 				.map((i, num) => (
 					<Scatter
+						className='cursor-pointer'
 						onClick={onClickBubble}
 						key={num}
 						name={i}

@@ -1,4 +1,4 @@
-const COMMON_STYLES = 'bg-transparent outline-none text-xl rounded-2xl';
+const COMMON_STYLES = 'outline-none text-xl rounded-2xl';
 
 const PRIMARY_STYLES = 'text-white bg-primary border-none';
 const OUTLINE_STYLES = 'text-primary font-semibold border-2 border-lightGrey';

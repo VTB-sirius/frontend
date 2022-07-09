@@ -138,7 +138,17 @@ function getStyles(variant: SelectVariants, isDanger: boolean): StylesConfig {
 				...SELECT_PRIMARY_STYLES,
 				control: (provided, state) => ({
 					...SELECT_PRIMARY_STYLES.control(provided, state),
-					boxShadow: isDanger ? 'inset 0 0 0 1.5px #ff6d3b' : '',
+					background: isDanger ? '#FFF4F5' : '#F3F3F5',
+				}),
+				dropdownIndicator: (provided) => ({
+					...provided,
+					Svg: {
+						fill: isDanger ? '#F24B4A' : '#919399',
+					},
+				}),
+				placeholder: (provided, state) => ({
+					...SELECT_PRIMARY_STYLES.placeholder(provided, state),
+					color: isDanger ? '#F24B4A' : '#74767A',
 				}),
 			};
 		case 'transparent':

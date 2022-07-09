@@ -29,10 +29,12 @@ const ThemesList: React.FC<Props> = ({ className = '', themes = [], themesOption
 				variant='transparent'
 				onInputChange={(value) => setInputValue(value)}
 				onChange={(item) => onAddItem(item.label)}
-				options={inputValue.length ? [
-					{ label: inputValue, value: inputValue },
-					...themesOptions.map((i) => ({ label: i, value: i })),
-				] : themesOptions.map((i) => ({ label: i, value: i }))}
+				options={inputValue.length
+					? [
+						{ label: inputValue, value: inputValue },
+						...themesOptions.map((i) => ({ label: i, value: i })),
+					]
+					: themesOptions.map((i) => ({ label: i, value: i }))}
 				placeholder='Добавить тему'
 				noOptionsMessage={() => 'Ничего не найдено -_-'} />
 		</div>

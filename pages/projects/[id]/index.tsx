@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 
 import ArrowIcon from '../../../assets/arrow.svg';
 import Arrow2Icon from '../../../assets/arrow2.svg';
+import { LG } from '../../../shared/consts/breakpoints';
 
 //DEV ONLY
 let chartData = [];
@@ -51,6 +52,7 @@ for(let i = 0; i < 10; i++) {
 	chartData3.push({
 		name: 'Product ' + i,
 		one: Math.floor(Math.random() * 100),
+		keywords: ['котик', 'собачка', 'крабик'],
 	});
 }
 //DEV ONLY
@@ -59,6 +61,12 @@ const ProjectPage = (): JSX.Element => {
 	const router = useRouter();
 
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
+
+	const [filterMenuWidth, setFilterMenuWidth] = useState(0);
+	const [bubbleChart1Width, setBubbleChart1Width] = useState(0);
+	const [areaChartWidth, setAreaChartWidth] = useState(0);
+	const [bubbleChart2Width, setBubbleChart2Width] = useState(0);
+	const [barChartWidth, setBarChartWidth] = useState(0);
 
 	const [showModelSelect, setShowMenuSelect] = useState(false);
 	const [selectedModel, setSelectedModel] = useState(1);
@@ -76,6 +84,14 @@ const ProjectPage = (): JSX.Element => {
 		});
 	}, [selectedCluster]);
 
+	useEffect(() => {
+		setFilterMenuWidth(windowSizes.width < LG ? windowSizes.width : 457);
+		setBubbleChart1Width(windowSizes.width < LG ? 1200 : windowSizes.width - 600);
+		setAreaChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
+		setBubbleChart2Width(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
+		setBarChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
+	}, [windowSizes]);
+
 	return (
 		<>
 			<Menu
@@ -83,7 +99,7 @@ const ProjectPage = (): JSX.Element => {
 				burgerButtonClassName='hidden'
 				onClose={() => setIsMenuOpened(false)}
 				right
-				width={457}
+				width={filterMenuWidth}
 			>
 				<FilterMenu
 					className='h-full'
@@ -99,8 +115,10 @@ const ProjectPage = (): JSX.Element => {
 					<Preloader className='mt-[40px]' />
 				) : (
 					<>
-						<div className='mt-16 grid grid-cols-[auto_auto_1fr_auto] gap-2'>
-							<h1 className='font-bold text-4xl'>
+						<div
+							className='mt-16 grid grid-cols-[auto_auto_1fr] lg:grid-cols-[auto_auto_1fr_auto] gap-2'
+						>
+							<h1 className='font-bold text-2xl lg:text-4xl'>
 								Тип модели:
 							</h1>
 							<div className='relative'>
@@ -108,7 +126,7 @@ const ProjectPage = (): JSX.Element => {
 									className='absolute z-10 w-full h-full opacity-0 cursor-pointer'
 									onFocus={() => setShowMenuSelect(true)}
 									onBlur={() => setShowMenuSelect(false)} />
-								<div className='font-bold text-4xl flex items-center'>
+								<div className='font-bold flex items-center text-2xl lg:text-4xl'>
 									{['Transformers', 'BERT', 'ruBERT'][selectedModel]}
 									<ArrowIcon />
 								</div>
@@ -121,27 +139,34 @@ const ProjectPage = (): JSX.Element => {
 								)}
 							</div>
 							<div></div>
-							<Button variant='outline' className='h-[50px] px-3' onClick={() => setIsMenuOpened(true)}>
+							<Button
+								variant='outline'
+								className='h-[50px] px-3 mt-[10px] lg:mt-auto'
+								style={{
+									gridColumn: '1 / 4',
+								}}
+								onClick={() => setIsMenuOpened(true)}
+							>
 								Отфильтровать данные
 								<Arrow2Icon className='inline-block stroke-primary' />
 							</Button>
 						</div>
 						<section className='mt-9'>
-							<h2 className='font-bold text-4xl'>
+							<h2 className='font-bold text-2xl lg:text-4xl'>
 								Intertopic distance map
 							</h2>
-							<div className='grid grid-cols-[1fr_auto]'>
-								<article className='pt-[30px]'>
+							<div className='grid lg:grid-cols-[1fr_auto]'>
+								<article className='pt-[30px] overflow-x-scroll'>
 									<BubbleChart
-										width={windowSizes.width - 600}
+										width={bubbleChart1Width}
 										height={400}
 										data={chartData} />
 								</article>
 								<article className='pt-5 grid gap-9 h-fit'>
-									<h3 className='font-bold text-3xl'>
+									<h3 className='font-bold text-2xl lg:text-3xl'>
 										Параметры
 									</h3>
-									<div className='grid grid-flow-col items-center gap-2 font-semibold text-[22px] text-grey'>
+									<div className='grid grid-flow-col items-center gap-2 font-semibold lg:text-[22px] text-grey'>
 										<label htmlFor='clustersCount'>
 											Число кластеров:
 										</label>
@@ -159,19 +184,21 @@ const ProjectPage = (): JSX.Element => {
 							</div>
 						</section>
 						<section className='mt-9'>
-							<h2 className='font-bold text-4xl'>
+							<h2 className='font-bold text-2xl lg:text-4xl'>
 								Topics over Time
 							</h2>
 							<article className='mt-9'>
-								<AreaChart
-									width={windowSizes.width - 240}
-									height={500}
-									data={chartData2}
-									colors={{
-										one: '#F94144',
-										two: '#F3722C',
-										three: '#F8961E',
-									}} />
+								<div className='overflow-x-scroll'>
+									<AreaChart
+										width={areaChartWidth}
+										height={500}
+										data={chartData2}
+										colors={{
+											one: '#F94144',
+											two: '#F3722C',
+											three: '#F8961E',
+										}} />
+								</div>
 								<ThemesList
 									className='mt-[30px]'
 									themes={selectedThemes}
@@ -197,14 +224,16 @@ const ProjectPage = (): JSX.Element => {
 							</article>
 						</section>
 						<section className='mt-9'>
-							<h2 className='font-bold text-4xl mb-[30px]'>
+							<h2 className='font-bold mb-[30px] text-2xl lg:text-4xl'>
 								Document clustering
 							</h2>
-							<BubbleChart
-								onClickBubble={setSelectedCluster}
-								width={windowSizes.width - 240}
-								height={400}
-								data={chartData} />
+							<div className='overflow-x-scroll'>
+								<BubbleChart
+									onClickBubble={setSelectedCluster}
+									width={bubbleChart2Width}
+									height={400}
+									data={chartData} />
+							</div>
 						</section>
 						{selectedCluster && (
 							<section className='my-20'>
@@ -229,16 +258,18 @@ const ProjectPage = (): JSX.Element => {
 									был очень популярен в эпоху Возрождения. Первая строка Lorem Ipsum, Lorem ipsum dolor sit
 									amet.., происходит от одной из строк в разделе 1.10.32
 								</p>
-								<h2 className='mt-[50px] font-bold text-4xl mb-8'>
+								<h2 className='mt-[50px] mb-8 font-bold text-2xl lg:text-4xl'>
 									Topic Distribution in the Text
 								</h2>
-								<BarChart
-									width={windowSizes.width - 240}
-									height={500}
-									data={chartData3}
-									colors={{
-										one: '#F94144',
-									}} />
+								<div className='overflow-x-scroll'>
+									<BarChart
+										width={barChartWidth}
+										height={500}
+										data={chartData3}
+										colors={{
+											one: '#F94144',
+										}} />
+								</div>
 							</section>
 						)}
 					</>

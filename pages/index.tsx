@@ -22,6 +22,7 @@ const MainPage = (): JSX.Element => {
 			>
 				<input
 					type='file'
+					accept='.xls,.xlsx'
 					onChange={(e) => {
 						setFile(e.target.files[0]);
 						setIsDragged(false);
