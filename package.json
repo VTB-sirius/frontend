@@ -13,7 +13,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "formik": "^2.2.9",
-    "next": "^12.2.0",
+    "next": "12.2.0",
     "react": "18.2.0",
     "react-burger-menu": "^3.0.8",
     "react-device-detect": "^2.2.2",
