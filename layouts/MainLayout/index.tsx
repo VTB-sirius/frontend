@@ -9,7 +9,7 @@ const MainLayout: React.FC<Props> = ({ className = '', children, disablePadding,
 					className={`font-bold text-[34px]
 						${disablePadding ? 'pl-[30px] pr-4 sm:ml-10 md:ml-30' : 'pl-[14px] lg:pl-auto'}`}
 				>
-					Skady
+					Classify
 				</a>
 			</Link>
 			{children}

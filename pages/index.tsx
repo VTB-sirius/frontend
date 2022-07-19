@@ -2,6 +2,8 @@ import MainLayout from '../layouts/MainLayout';
 import Button from '../components/Common/Button';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useMutation } from 'react-query';
+import { createProject } from '../shared/api/projects';
 
 import UploadIcon from '../assets/upload.svg';
 import LoaderIcon from '../assets/loader.svg';
@@ -10,7 +12,10 @@ const MainPage = (): JSX.Element => {
 	const router = useRouter();
 
 	const [isDragged, setIsDragged] = useState(false);
-	const [file, setFile] = useState<File>();
+
+	const { mutate, isLoading } = useMutation(createProject, {
+		onSuccess: (res) => router.push(`/projects/${res.payload.id}?model=bert`),
+	});
 
 	return (
 		<MainLayout>
@@ -24,17 +29,16 @@ const MainPage = (): JSX.Element => {
 					type='file'
 					accept='.xls,.xlsx'
 					onChange={(e) => {
-						setFile(e.target.files[0]);
-						setIsDragged(false);
-
-						router.push('/projects/1');
+						mutate({
+							file: e.target.files[0],
+						});
 					}}
 					className='absolute top-0 w-full h-full cursor-pointer opacity-0' />
 				<UploadIcon className='fill-primary mx-auto mb-7' />
 				<p className='font-semibold text-xl text-center mb-[30px]'>
-					Выберите файл или перетащите его сюда
+					{isLoading ? 'Загружаем файл... ' : 'Выберите файл или перетащите его сюда'}
 				</p>
-				{false ? (
+				{isLoading ? (
 					<LoaderIcon className='w-[73px] h-[73px] mx-auto' />
 				) : (
 					<Button className='block h-[73px] max-w-[343px] w-full mx-auto'>

@@ -3,6 +3,15 @@ import Tooltip from '../Tooltip';
 import Props from './BarChart.props';
 
 const BarChart: React.FC<Props> = ({ width, height, data, colors }) => {
+	function getContent(i) {
+		if(i.payload.length && Array.isArray(i.payload[0].payload.keywords))
+			return i.payload[0].payload.keywords.join(' • ');
+		else if(i.payload.length)
+			return i.payload[0].payload.keywords;
+		else
+			return '';
+	}
+
 	return (
 		<BarReChart
 			width={width}
@@ -20,9 +29,7 @@ const BarChart: React.FC<Props> = ({ width, height, data, colors }) => {
 				<Tooltip
 					className='w-[270px]'
 					title='Ключевые слова'
-					content={i.payload.length
-						? i.payload[0].payload.keywords.join(' • ')
-						: ''} />
+					content={getContent(i)} />
 			)} />
 			{Object.keys(data[0])
 				.filter((i) => i !== 'keywords' && i !== 'name')

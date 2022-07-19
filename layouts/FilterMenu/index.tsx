@@ -40,7 +40,7 @@ const FilterMenu: React.FC<Props> = ({ className = '', onBack, clusters, onFormS
 					<Loader className='h-9 w-9 mx-5' />
 				) : (
 					<Button className='h-9 px-4 text-sm' style={{ borderRadius: 8 }} onClick={formik.submitForm}>
-						Отправить приглашение
+						Отфильтровать данные
 					</Button>
 				)}
 				<Button

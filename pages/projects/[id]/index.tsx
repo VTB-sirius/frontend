@@ -5,8 +5,6 @@ import SelectList from '../../../components/Common/SelectList';
 import { useState, useEffect } from 'react';
 import BubbleChart from '../../../components/Charts/BubbleChart';
 import useWindowDemantions from '../../../hooks/useWindowDemantions';
-import AreaChart from '../../../components/Charts/AreaChart';
-import ThemesList from '../../../components/Common/ThemesList';
 import BarChart from '../../../components/Charts/BarChart';
 import { slide as Menu } from 'react-burger-menu';
 import FilterMenu from '../../../layouts/FilterMenu';
@@ -15,47 +13,12 @@ import { useRouter } from 'next/router';
 import ArrowIcon from '../../../assets/arrow.svg';
 import Arrow2Icon from '../../../assets/arrow2.svg';
 import { LG } from '../../../shared/consts/breakpoints';
-
-//DEV ONLY
-let chartData = [];
-
-for(let i = 0; i < 160; i++) {
-	chartData.push({
-		x: Math.floor(Math.random() * 100),
-		y: Math.floor(Math.random() * 100),
-		z: Math.floor(Math.random() * 100),
-		color: ['#F94144', '#F3722C', '#F8961E'][Math.floor(Math.random() * 3)],
-		title: 'Product ' + Math.floor(Math.random() * 10),
-		keywords: ['Собака', 'Кошка', 'Лягкушка', 'Животные', 'Птицы', 'Ежи'],
-	});
-}
-
-let chartData2 = [];
-
-for(let i = 0; i < 10; i++) {
-	chartData2.push({
-		name: i,
-		one: Math.floor(Math.random() * 100),
-		two: Math.floor(Math.random() * 50) + 100,
-		three: Math.floor(Math.random() * 150) + 150,
-		keywords: {
-			one: ['котик', 'собачка', 'крабик'],
-			two: ['питон', 'удав', 'змея'],
-			three: ['Ангелина', 'Кристина', 'Эльза'],
-		},
-	});
-}
-
-let chartData3 = [];
-
-for(let i = 0; i < 10; i++) {
-	chartData3.push({
-		name: 'Product ' + i,
-		one: Math.floor(Math.random() * 100),
-		keywords: ['котик', 'собачка', 'крабик'],
-	});
-}
-//DEV ONLY
+import { useMutation } from 'react-query';
+import { getProjectById } from '../../../shared/api/projects';
+import models from '../../../shared/types/models.type';
+import MODELS from '../../../shared/consts/models';
+import COLORS from '../../../shared/consts/colors';
+import { getDocument } from '../../../shared/api/documents';
 
 const ProjectPage = (): JSX.Element => {
 	const router = useRouter();
@@ -64,18 +27,30 @@ const ProjectPage = (): JSX.Element => {
 
 	const [filterMenuWidth, setFilterMenuWidth] = useState(0);
 	const [bubbleChart1Width, setBubbleChart1Width] = useState(0);
-	const [areaChartWidth, setAreaChartWidth] = useState(0);
 	const [bubbleChart2Width, setBubbleChart2Width] = useState(0);
 	const [barChartWidth, setBarChartWidth] = useState(0);
 
 	const [showModelSelect, setShowMenuSelect] = useState(false);
 	const [selectedModel, setSelectedModel] = useState(1);
-
-	const [selectedThemes, setSelectedThemes] = useState([]);
 	
 	const [selectedCluster, setSelectedCluster] = useState<any>();
 
 	const windowSizes = useWindowDemantions();
+
+	const { data, isLoading, mutate } = useMutation(getProjectById, {
+		onSuccess: (res) => {
+			if(!res.payload) {
+				setTimeout(() => {
+					mutate({
+						model: router.query.model as models,
+						id: router.query.id as string,
+					});
+				}, 5000);
+			}
+		},
+	});
+	
+	const documentMutation = useMutation(getDocument);
 
 	useEffect(() => {
 		window.scrollBy({
@@ -85,9 +60,20 @@ const ProjectPage = (): JSX.Element => {
 	}, [selectedCluster]);
 
 	useEffect(() => {
+		if(router && router.query && router.query.id) {
+			mutate({
+				model: router.query.model as models,
+				id: router.query.id as string,
+			});
+			
+			setSelectedModel(MODELS.indexOf(router.query.model as models));
+		}
+	}, [router]);
+
+	useEffect(() => {
 		setFilterMenuWidth(windowSizes.width < LG ? windowSizes.width : 457);
 		setBubbleChart1Width(windowSizes.width < LG ? 1200 : windowSizes.width - 600);
-		setAreaChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
+		//setAreaChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
 		setBubbleChart2Width(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
 		setBarChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
 	}, [windowSizes]);
@@ -111,7 +97,7 @@ const ProjectPage = (): JSX.Element => {
 					onBack={() => setIsMenuOpened(false)} />
 			</Menu>
 			<MainLayout>
-				{false ? (
+				{isLoading || !data || !data.payload ? (
 					<Preloader className='mt-[40px]' />
 				) : (
 					<>
@@ -127,23 +113,27 @@ const ProjectPage = (): JSX.Element => {
 									onFocus={() => setShowMenuSelect(true)}
 									onBlur={() => setShowMenuSelect(false)} />
 								<div className='font-bold flex items-center text-2xl lg:text-4xl'>
-									{['Transformers', 'BERT', 'ruBERT'][selectedModel]}
+									{MODELS[selectedModel]}
 									<ArrowIcon />
 								</div>
 								{showModelSelect && (
 									<SelectList
 										className='absolute z-20'
 										selectedItem={selectedModel}
-										onSelectItem={setSelectedModel}
-										items={['Transformers', 'BERT', 'ruBERT']} />
+										onSelectItem={(item) => {
+											setSelectedModel(item);
+
+											router.push(`/projects/${router.query.id}?model=${MODELS[item]}`);
+										}}
+										items={MODELS} />
 								)}
 							</div>
 							<div></div>
 							<Button
 								variant='outline'
-								className='h-[50px] px-3 mt-[10px] lg:mt-auto'
+								className='h-[50px] px-3 mt-[10px] lg:mt-auto lg:w-fit'
 								style={{
-									gridColumn: '1 / 4',
+									gridColumn: windowSizes.width < LG ? '1 / 4' : '',
 								}}
 								onClick={() => setIsMenuOpened(true)}
 							>
@@ -160,7 +150,17 @@ const ProjectPage = (): JSX.Element => {
 									<BubbleChart
 										width={bubbleChart1Width}
 										height={400}
-										data={chartData} />
+										data={data.payload.intertopic_map.map((i) => ({
+											x: i.cord_x,
+											y: i.cord_y,
+											z: i.size < data.payload.intertopic_map.length
+												? data.payload.intertopic_map.length / i.size
+												: i.size,
+											s: null,
+											color: COLORS[Math.floor(Math.random() * 3)],
+											title: 'Point ' + i.id,
+											keywords: i.keywords,
+										}))} />
 								</article>
 								<article className='pt-5 grid gap-9 h-fit'>
 									<h3 className='font-bold text-2xl lg:text-3xl'>
@@ -183,7 +183,7 @@ const ProjectPage = (): JSX.Element => {
 								</article>
 							</div>
 						</section>
-						<section className='mt-9'>
+						{/*<section className='mt-9'>
 							<h2 className='font-bold text-2xl lg:text-4xl'>
 								Topics over Time
 							</h2>
@@ -222,41 +222,38 @@ const ProjectPage = (): JSX.Element => {
 									}}
 									themesOptions={['Theme 1', 'Theme 2', 'Theme 3', 'Theme 4', 'Theme 5']} />
 							</article>
-						</section>
+						</section>*/}
 						<section className='mt-9'>
 							<h2 className='font-bold mb-[30px] text-2xl lg:text-4xl'>
 								Document clustering
 							</h2>
 							<div className='overflow-x-scroll'>
 								<BubbleChart
-									onClickBubble={setSelectedCluster}
+									onClickBubble={(data) => {
+										setSelectedCluster(data);
+
+										documentMutation.mutate({
+											_id: data.payload._id,
+										});
+									}}
 									width={bubbleChart2Width}
 									height={400}
-									data={chartData} />
+									data={data.payload.documents.map((i) => ({
+										x: i.cord_x,
+										y: i.cord_y,
+										z: 30,
+										s: null,
+										color: COLORS[i.cluster_id],
+										title: 'Cluster '+ i.cluster_id,
+										keywords: i.description,
+										_id: i._id,
+									}))} />
 							</div>
 						</section>
-						{selectedCluster && (
+						{selectedCluster && documentMutation.isSuccess && documentMutation.data.payload ? (
 							<section className='my-20'>
 								<p>
-									Многие думают, что Lorem Ipsum - взятый с потолка псевдо-латинский набор слов, но
-									это не совсем так. Его корни уходят в один фрагмент классической латыни 45 года н.э.,
-									то есть более двух тысячелетий назад. Ричард МакКлинток, профессор латыни из колледжа
-									Hampden-Sydney, штат Вирджиния, взял одно из самых странных слов в Lorem Ipsum, consectetur,
-									и занялся его поисками в классической латинской литературе. В результате он нашёл неоспоримый
-									первоисточник Lorem Ipsum в разделах 1.10.32 и 1.10.33 книги de Finibus Bonorum et Malorum
-									(О пределах добра и зла), написанной Цицероном в 45 году н.э. Этот трактат по теории этики
-									был очень популярен в эпоху Возрождения. Первая строка Lorem Ipsum, Lorem ipsum dolor sit
-									amet.., происходит от одной из строк в разделе 1.10.32
-
-									Многие думают, что Lorem Ipsum - взятый с потолка псевдо-латинский набор слов, но это не
-									совсем так. Его корни уходят в один фрагмент классической латыни 45 года н.э., то есть более
-									двух тысячелетий назад. Ричард МакКлинток, профессор латыни из колледжа Hampden-Sydney,
-									штат Вирджиния, взял одно из самых странных слов в Lorem Ipsum, consectetur, и занялся
-									его поисками в классической латинской литературе. В результате он нашёл неоспоримый
-									первоисточник Lorem Ipsum в разделах 1.10.32 и 1.10.33 книги de Finibus Bonorum et Malorum
-									(О пределах добра и зла), написанной Цицероном в 45 году н.э. Этот трактат по теории этики
-									был очень популярен в эпоху Возрождения. Первая строка Lorem Ipsum, Lorem ipsum dolor sit
-									amet.., происходит от одной из строк в разделе 1.10.32
+									{documentMutation.data.payload.content}
 								</p>
 								<h2 className='mt-[50px] mb-8 font-bold text-2xl lg:text-4xl'>
 									Topic Distribution in the Text
@@ -265,13 +262,17 @@ const ProjectPage = (): JSX.Element => {
 									<BarChart
 										width={barChartWidth}
 										height={500}
-										data={chartData3}
+										data={documentMutation.data.payload.distribution.map((i) => ({
+											name: i.label,
+											one: i.value,
+											keywords: i.label,
+										}))}
 										colors={{
 											one: '#F94144',
 										}} />
 								</div>
 							</section>
-						)}
+						) : ''}
 					</>
 				)}
 			</MainLayout>

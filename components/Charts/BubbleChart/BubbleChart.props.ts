@@ -12,7 +12,7 @@ interface IChartDataItem {
 	
 	color: string;
 	title: string;
-	keywords: string[];s
+	keywords: string[] | string;
 }
 
 export default Props;

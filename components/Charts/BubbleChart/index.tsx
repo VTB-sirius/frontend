@@ -15,6 +15,15 @@ const BubbleChart: React.FC<Props> = ({ width, height, data, onClickBubble = () 
 		scatters[i.color].push(i);
 	});
 
+	function getTooltipContent(i: any) {
+		if(i.payload.length && Array.isArray(i.payload[0].payload.keywords))
+			return i.payload[0].payload.keywords.join(' • ');
+		else if(i.payload.length)
+			return i.payload[0].payload.keywords;
+		else
+			return '';
+	}
+
 	return (
 		<ScatterChart width={width} height={height}>
 			<CartesianGrid />
@@ -24,7 +33,7 @@ const BubbleChart: React.FC<Props> = ({ width, height, data, onClickBubble = () 
 			<RechartTooltip content={(i) => (
 				<Tooltip
 					title={i.payload.length ? i.payload[0].payload.title : ''}
-					content={i.payload.length ? i.payload[0].payload.keywords.join(' • ') : ''} />
+					content={getTooltipContent(i)} />
 			)} />
 			{Object.keys(scatters)
 				.map((i, num) => (

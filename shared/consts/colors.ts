@@ -1,0 +1,4 @@
+const COLORS = ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D', '#43AA8B', '#577590', '#2D9CDB', '#2555FF', '#6B25FF', 
+	'#BD0EE9', '#D2167C', '#10DCD0', '#1086DC', '#0E5EBC', '#3937A1', '#7237A1', '#A13797', '#A1374A', '#B23B3B'];
+
+export default COLORS;
