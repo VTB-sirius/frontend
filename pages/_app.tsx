@@ -16,6 +16,7 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
 				<title>
 					Classify — сервис для лёгкого анализа данных
 				</title>
+				<meta httpEquiv='Content-Security-Policy' content='upgrade-insecure-requests' /> 
 				<link rel='icon' href='/favicon.ico' type='image/x-icon' />
 				<meta
 					name='description'
