@@ -1,6 +1,5 @@
 import Preloader from '../../../components/Common/Preloader';
 import MainLayout from '../../../layouts/MainLayout';
-import Button from '../../../components/Common/Button';
 import SelectList from '../../../components/Common/SelectList';
 import { useState, useEffect } from 'react';
 import BubbleChart from '../../../components/Charts/BubbleChart';
@@ -9,9 +8,6 @@ import BarChart from '../../../components/Charts/BarChart';
 import { slide as Menu } from 'react-burger-menu';
 import FilterMenu from '../../../layouts/FilterMenu';
 import { useRouter } from 'next/router';
-
-import ArrowIcon from '../../../assets/arrow.svg';
-import Arrow2Icon from '../../../assets/arrow2.svg';
 import { LG } from '../../../shared/consts/breakpoints';
 import { useMutation } from 'react-query';
 import { getProjectById } from '../../../shared/api/projects';
@@ -20,6 +16,8 @@ import MODELS, { MODEL_TO_NAME } from '../../../shared/consts/models';
 import COLORS from '../../../shared/consts/colors';
 import { getDocument } from '../../../shared/api/documents';
 
+import ArrowIcon from '../../../assets/arrow.svg';
+
 const ProjectPage = (): JSX.Element => {
 	const router = useRouter();
 
@@ -27,7 +25,6 @@ const ProjectPage = (): JSX.Element => {
 
 	const [filterMenuWidth, setFilterMenuWidth] = useState(0);
 	const [bubbleChart1Width, setBubbleChart1Width] = useState(0);
-	const [bubbleChart2Width, setBubbleChart2Width] = useState(0);
 	const [barChartWidth, setBarChartWidth] = useState(0);
 
 	const [showModelSelect, setShowMenuSelect] = useState(false);
@@ -73,8 +70,7 @@ const ProjectPage = (): JSX.Element => {
 	useEffect(() => {
 		setFilterMenuWidth(windowSizes.width < LG ? windowSizes.width : 457);
 		setBubbleChart1Width(windowSizes.width < LG ? 1200 : windowSizes.width - 600);
-		//setAreaChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
-		setBubbleChart2Width(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
+		setBubbleChart1Width(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
 		setBarChartWidth(windowSizes.width < LG ? 1200 : windowSizes.width - 240);
 	}, [windowSizes]);
 
@@ -148,7 +144,7 @@ const ProjectPage = (): JSX.Element => {
 							<div>
 								<article className='pt-[30px] overflow-x-scroll'>
 									<BubbleChart
-										width={bubbleChart2Width}
+										width={bubbleChart1Width}
 										height={400}
 										data={data.payload.intertopic_map && data.payload.intertopic_map.map((i) => ({
 											x: i.cord_x,
@@ -158,7 +154,7 @@ const ProjectPage = (): JSX.Element => {
 												: i.size,
 											s: null,
 											color: COLORS[Math.floor(Math.random() * 3)],
-											title: 'Point ' + i.id,
+											title: 'Cluster ' + i.id,
 											keywords: i.keywords,
 										}))} />
 								</article>
@@ -236,7 +232,7 @@ const ProjectPage = (): JSX.Element => {
 											_id: data.payload._id,
 										});
 									}}
-									width={bubbleChart2Width}
+									width={bubbleChart1Width}
 									height={400}
 									data={data.payload.documents && data.payload.documents.map((i) => ({
 										x: i.cord_x,
