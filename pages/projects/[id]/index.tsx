@@ -97,7 +97,7 @@ const ProjectPage = (): JSX.Element => {
 					onBack={() => setIsMenuOpened(false)} />
 			</Menu>
 			<MainLayout>
-				{isLoading || !data || data.status === 'pending' ? (
+				{isLoading || !data || !Object.keys(data.payload).length ? (
 					<Preloader className='mt-[40px]' />
 				) : (
 					<>
