@@ -16,7 +16,7 @@ import { LG } from '../../../shared/consts/breakpoints';
 import { useMutation } from 'react-query';
 import { getProjectById } from '../../../shared/api/projects';
 import models from '../../../shared/types/models.type';
-import MODELS from '../../../shared/consts/models';
+import MODELS, { MODEL_TO_NAME } from '../../../shared/consts/models';
 import COLORS from '../../../shared/consts/colors';
 import { getDocument } from '../../../shared/api/documents';
 
@@ -42,7 +42,7 @@ const ProjectPage = (): JSX.Element => {
 			if(!res.payload) {
 				setTimeout(() => {
 					mutate({
-						model: router.query.model as models,
+						model: MODEL_TO_NAME[router.query.model as models] as any,
 						id: router.query.id as string,
 					});
 				}, 5000);
@@ -97,7 +97,7 @@ const ProjectPage = (): JSX.Element => {
 					onBack={() => setIsMenuOpened(false)} />
 			</Menu>
 			<MainLayout>
-				{isLoading || !data || !data.payload ? (
+				{isLoading || !data || data.status === 'pending' ? (
 					<Preloader className='mt-[40px]' />
 				) : (
 					<>
@@ -129,7 +129,7 @@ const ProjectPage = (): JSX.Element => {
 								)}
 							</div>
 							<div></div>
-							<Button
+							{/*<Button
 								variant='outline'
 								className='h-[50px] px-3 mt-[10px] lg:mt-auto lg:w-fit'
 								style={{
@@ -139,18 +139,18 @@ const ProjectPage = (): JSX.Element => {
 							>
 								Отфильтровать данные
 								<Arrow2Icon className='inline-block stroke-primary' />
-							</Button>
+							</Button>*/}
 						</div>
 						<section className='mt-9'>
 							<h2 className='font-bold text-2xl lg:text-4xl'>
 								Intertopic distance map
 							</h2>
-							<div className='grid lg:grid-cols-[1fr_auto]'>
+							<div>
 								<article className='pt-[30px] overflow-x-scroll'>
 									<BubbleChart
-										width={bubbleChart1Width}
+										width={bubbleChart2Width}
 										height={400}
-										data={data.payload.intertopic_map.map((i) => ({
+										data={data.payload.intertopic_map && data.payload.intertopic_map.map((i) => ({
 											x: i.cord_x,
 											y: i.cord_y,
 											z: i.size < data.payload.intertopic_map.length
@@ -162,7 +162,7 @@ const ProjectPage = (): JSX.Element => {
 											keywords: i.keywords,
 										}))} />
 								</article>
-								<article className='pt-5 grid gap-9 h-fit'>
+								{/*<article className='pt-5 grid gap-9 h-fit'>
 									<h3 className='font-bold text-2xl lg:text-3xl'>
 										Параметры
 									</h3>
@@ -180,7 +180,7 @@ const ProjectPage = (): JSX.Element => {
 									<Button className='h-[50px] w-full'>
 										Дообучить модель
 									</Button>
-								</article>
+								</article>*/}
 							</div>
 						</section>
 						{/*<section className='mt-9'>
@@ -238,7 +238,7 @@ const ProjectPage = (): JSX.Element => {
 									}}
 									width={bubbleChart2Width}
 									height={400}
-									data={data.payload.documents.map((i) => ({
+									data={data.payload.documents && data.payload.documents.map((i) => ({
 										x: i.cord_x,
 										y: i.cord_y,
 										z: 30,
