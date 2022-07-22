@@ -14,7 +14,7 @@ const MainPage = (): JSX.Element => {
 	const [isDragged, setIsDragged] = useState(false);
 
 	const { mutate, isLoading } = useMutation(createProject, {
-		onSuccess: (res) => router.push(`/projects/${res.payload.id}?model=bert`),
+		onSuccess: (res) => router.push(`/projects/${res.payload.id}?model=lda`),
 	});
 
 	return (
