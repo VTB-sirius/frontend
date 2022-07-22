@@ -62,7 +62,7 @@ const ProjectPage = (): JSX.Element => {
 	useEffect(() => {
 		if(router && router.query && router.query.id) {
 			mutate({
-				model: router.query.model as models,
+				model: MODEL_TO_NAME[router.query.model as models] as any,
 				id: router.query.id as string,
 			});
 			
