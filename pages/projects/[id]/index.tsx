@@ -239,7 +239,7 @@ const ProjectPage = (): JSX.Element => {
 										y: i.cord_y,
 										z: 30,
 										s: null,
-										color: COLORS[Math.abs(i.cluster_id)],
+										color: COLORS[i.cluster_id < 0 ? COLORS.length - Math.abs(i.cluster_id) : i.cluster_id],
 										title: 'Cluster '+ i.cluster_id,
 										keywords: i.description,
 										_id: i._id,
