@@ -239,7 +239,7 @@ const ProjectPage = (): JSX.Element => {
 										y: i.cord_y,
 										z: 30,
 										s: null,
-										color: COLORS[i.cluster_id < 0
+										color: COLORS[data.payload.documents.map((i) => i.cluster_id).sort()[0] < 0
 											? i.cluster_id + Math.abs(data.payload.documents.map((i) => i.cluster_id).sort()[0])
 											: i.cluster_id],
 										title: 'Cluster '+ i.cluster_id,
